@@ -1,5 +1,5 @@
 import jsPsychHTMLMultiResponse from '@jspsych-contrib/plugin-html-multi-response';
-import { getStimulus, } from '../helpers';
+import { getStimulus } from '../helpers';
 
 // choosing the next stimulus from the corpus occurs during the fixation trial
 // prior to the actual display of the stimulus, where user response is collected

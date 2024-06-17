@@ -4,7 +4,9 @@ import { fractionToMathML } from './';
 
 export const prepareChoices = (target, distractors, randomizeOrder = true, trialType) => {
   let choices;
-  if (!target || distractors.includes(target)) { // If target is not present, don't add to options
+  console.log('target ', target, ' distractors ', distractors);
+  if (!target || distractors.includes(target)) {
+    // If target is not present, don't add to options
     choices = [...distractors];
   } else {
     choices = [target, ...distractors]; // add target to options
@@ -21,7 +23,8 @@ export const prepareChoices = (target, distractors, randomizeOrder = true, trial
   }
 
   // Update session variables
-  const correctResponseIdx = trialType === 'Fraction' ? store.session('nonFractionSelections').indexOf(target) : choices.indexOf(target);
+  const correctResponseIdx =
+    trialType === 'Fraction' ? store.session('nonFractionSelections').indexOf(target) : choices.indexOf(target);
   store.session.set('target', target);
   store.session.set('correctResponseIdx', correctResponseIdx);
   store.session.set('choices', choices);

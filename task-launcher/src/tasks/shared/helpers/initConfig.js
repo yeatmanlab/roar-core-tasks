@@ -5,10 +5,11 @@ import _isUndefined from 'lodash/isUndefined';
 import i18next from 'i18next';
 import { camelize } from '@bdelab/roar-utils';
 import store from 'store2';
-import {isRoarApp} from "./isRoarApp.js";
+import { isRoarApp } from './isRoarApp.js';
 
 const defaultCorpus = {
   egmaMath: 'math-item-bank',
+  roarInference: 'inference-item-bank',
   matrixReasoning: 'matrix-reasoning-item-bank',
   mentalRotation: 'mental-rotation-item-bank',
   sameDifferentSelection: 'same-different-selection-item-bank',
@@ -61,9 +62,8 @@ export const initSharedConfig = async (firekit, gameParams, userParams, displayE
     language: language ?? i18next.language,
     maxTime: maxTime || 100,
     storeItemId: storeItemId,
-    isRoarApp: isRoarApp(firekit)
+    isRoarApp: isRoarApp(firekit),
   };
-
 
   store.session.set('pid', userParams.pid);
 
@@ -76,7 +76,6 @@ export const initSharedConfig = async (firekit, gameParams, userParams, displayE
     };
     store.session.set('memoryGameConfig', memoryGameConfig);
   }
-
 
   // default corpus if nothing is passed in
   if (!config.corpus) config.corpus = defaultCorpus[camelize(taskName)];

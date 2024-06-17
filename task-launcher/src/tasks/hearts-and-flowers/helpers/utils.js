@@ -23,16 +23,14 @@ export const InputKey = Object.freeze({
   Enter: 'enter',
 });
 
-
 export const AssessmentStageType = Object.freeze({
-    HeartsPractice: 'hearts practice',
-    FlowersPractice: 'flowers practice',
-    HeartsStimulus: 'hearts stimulus',
-    FlowersStimulus: 'flowers stimulus',
-    HeartsAndFlowersPractice: 'hearts and flowers practice',
-    HeartsAndFlowersStimulus: 'hearts and flowers stimulus',
+  HeartsPractice: 'hearts practice',
+  FlowersPractice: 'flowers practice',
+  HeartsStimulus: 'hearts stimulus',
+  FlowersStimulus: 'flowers stimulus',
+  HeartsAndFlowersPractice: 'hearts and flowers practice',
+  HeartsAndFlowersStimulus: 'hearts and flowers stimulus',
 });
-
 
 // TODO: better Exception/Error handling
 /**
@@ -67,11 +65,11 @@ export function getCorrectInputSide(stimulusType, stimulusSideType) {
  * retrieve html for the visual stimulus container
  * @param {*} imageSrc stimulus image source
  * @param {*} isLeft whether the stimulus should be shown on the left side
- * @param {*} promptText if you need to show a prompt text, 
+ * @param {*} promptText if you need to show a prompt text,
  * @param {*} replayButtonHtmlId if you need to show an audio replay button
- * @returns 
+ * @returns
  */
-export const getStimulusLayout = (imageSrc, isLeft, promptText=undefined, replayButtonHtmlId=undefined) => {
+export const getStimulusLayout = (imageSrc, isLeft, promptText = undefined, replayButtonHtmlId = undefined) => {
   const stimulusClass = isLeft ? 'stimulus-left' : 'stimulus-right';
   let template = '<div class="haf-stimulus-holder">';
   if (replayButtonHtmlId) {
@@ -79,7 +77,7 @@ export const getStimulusLayout = (imageSrc, isLeft, promptText=undefined, replay
       <button id='${replayButtonHtmlId}' class="replay">
         ${replayButtonSvg}
       </button>
-    `
+    `;
   }
   if (promptText) {
     template += `
@@ -88,7 +86,7 @@ export const getStimulusLayout = (imageSrc, isLeft, promptText=undefined, replay
           ${promptText}
         </p>
       </div>
-    `
+    `;
   }
   template += `
       <div class='haf-stimulus-container'>
@@ -97,7 +95,7 @@ export const getStimulusLayout = (imageSrc, isLeft, promptText=undefined, replay
         </div>
       </div>
     </div>
-  `
+  `;
 
   return template;
-}; 
+};

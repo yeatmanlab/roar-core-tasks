@@ -5,12 +5,7 @@ import { initTrialSaving, initTimeline, createPreloadTrials } from '../shared/he
 import { instructions } from './trials/instructions';
 import { jsPsych, initializeCat } from '../taskSetup';
 // trials
-import { 
-  afcStimulus, 
-  exitFullscreen, 
-  setupStimulus,
-  taskFinished,
-} from '../shared/trials';
+import { afcStimulus, exitFullscreen, setupStimulus, taskFinished } from '../shared/trials';
 
 export default function buildMatrixTimeline(config, mediaAssets) {
   const preloadTrials = createPreloadTrials(mediaAssets).default;
@@ -26,9 +21,7 @@ export default function buildMatrixTimeline(config, mediaAssets) {
   };
 
   const stimulusBlock = {
-    timeline: [
-      afcStimulus(trialConfig) 
-    ],
+    timeline: [afcStimulus(trialConfig)],
     // true = execute normally, false = skip
     conditional_function: () => {
       if (store.session.get('skipCurrentTrial')) {

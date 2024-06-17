@@ -2,7 +2,7 @@ import jsPsychHTMLMultiResponse from '@jspsych-contrib/plugin-html-multi-respons
 import jsPsychAudioMultiResponse from '@jspsych-contrib/plugin-audio-multi-response';
 import { mediaAssets } from '../../..';
 import store from 'store2';
-import { jsPsych, isTouchScreen} from '../../taskSetup';
+import { jsPsych, isTouchScreen } from '../../taskSetup';
 import { InputKey } from '../helpers/utils';
 import { replayButtonSvg, overrideAudioTrialForReplayableAudio } from '../helpers/audioTrials';
 
@@ -44,7 +44,7 @@ export function getKeepUp() {
     mediaAssets.audio.heartsAndFlowersInstruct1,
     store.session.get('translations').heartsAndFlowersInstruct1, // hearts-and-flowers-instruct1:	"This time the game will go faster. It won't tell you if you are right or wrong."
     store.session.get('translations').continueButtonText,
-    store.session.get('translations').heartsAndFlowersEncourage1,//Try to keep up!
+    store.session.get('translations').heartsAndFlowersEncourage1, //Try to keep up!
   );
 }
 
@@ -54,7 +54,7 @@ export function getKeepGoing() {
     mediaAssets.audio.heartsAndFlowersInstruct2,
     store.session.get('translations').heartsAndFlowersInstruct2, //hearts-and-flowers-instruct2: "Try to answer as fast as you can without making mistakes."
     store.session.get('translations').continueButtonText,
-    store.session.get('translations').heartsAndFlowersEncourage2,// If you make a mistake, just keep going!
+    store.session.get('translations').heartsAndFlowersEncourage2, // If you make a mistake, just keep going!
   );
 }
 
@@ -88,7 +88,7 @@ export function getEndGame() {
   );
 }
 
-function buildInstructionTrial(mascotImage, promptAudio, promptText, buttonText, bottomText=undefined) {
+function buildInstructionTrial(mascotImage, promptAudio, promptText, buttonText, bottomText = undefined) {
   if (!mascotImage) {
     // throw new Error(`Missing mascot image for instruction trial`);
     console.error(`buildInstructionTrial: Missing mascot image`);
@@ -105,8 +105,7 @@ function buildInstructionTrial(mascotImage, promptAudio, promptText, buttonText,
   const trial = {
     type: jsPsychAudioMultiResponse,
     stimulus: promptAudio,
-    prompt:
-      `<div class="haf-stimulus-holder">
+    prompt: `<div class="haf-stimulus-holder">
         <div class="lev-row-container header">
           <p>${promptText}</p>
         </div>
@@ -123,12 +122,13 @@ function buildInstructionTrial(mascotImage, promptAudio, promptText, buttonText,
         ${bottomText ? `<div class="lev-row-container header"><p>${bottomText}</p></div>` : ''}
       </div>`,
     prompt_above_buttons: true,
-    keyboard_choices: isTouchScreen? InputKey.NoKeys : [InputKey.SpaceBar, InputKey.Enter],
+    keyboard_choices: isTouchScreen ? InputKey.NoKeys : [InputKey.SpaceBar, InputKey.Enter],
     button_choices: ['Next'],
-    button_html:[
+    button_html: [
       `<button class='primary'>
         ${buttonText.trim()}
-      </button>`,],
+      </button>`,
+    ],
   };
   overrideAudioTrialForReplayableAudio(trial, jsPsych.pluginAPI, replayButtonHtmlId);
   return trial;

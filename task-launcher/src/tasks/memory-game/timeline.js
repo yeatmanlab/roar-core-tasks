@@ -21,18 +21,12 @@ export default function buildMemoryTimeline(config, mediaAssets) {
   };
 
   const corsiBlocksStimulus = {
-    timeline: [
-      getCorsiBlocks({ mode: 'display' }),
-      getCorsiBlocks({ mode: 'input' }),
-    ],
+    timeline: [getCorsiBlocks({ mode: 'display' }), getCorsiBlocks({ mode: 'input' })],
     repetitions: 21,
   };
 
   const corsiBlocksReverse = {
-    timeline: [
-      getCorsiBlocks({ mode: 'display', reverse: true}),
-      getCorsiBlocks({ mode: 'input', reverse: true}),
-    ],
+    timeline: [getCorsiBlocks({ mode: 'display', reverse: true }), getCorsiBlocks({ mode: 'input', reverse: true })],
     repetitions: 21,
   };
 

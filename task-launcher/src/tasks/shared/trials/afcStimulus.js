@@ -10,7 +10,7 @@ import {
   arrowKeyEmojis,
   replayButtonDiv,
   setupReplayAudio,
-  setSkipCurrentBlock
+  setSkipCurrentBlock,
 } from '../../shared/helpers';
 import { mediaAssets } from '../../..';
 import _toNumber from 'lodash/toNumber';
@@ -49,12 +49,18 @@ const showStaggeredBtnAndPlaySound = (btn) => {
     const altValue = img.alt;
     playAudio(mediaAssets.audio[camelize(altValue)]);
   }
-}
+};
 
 function getStimulus(trialType) {
   // ToDo: trialType (audio/html) no longer varies -- remove
   const stim = store.session.get('nextStimulus');
-  if (!stim.audioFile) return mediaAssets.audio.nullAudio;
+  console.log('stim ', stim, 'media asset ', stim.audioFile, ' media assets null audio ', mediaAssets.audio.nullAudio);
+  if (!stim.audioFile) {
+    console.log('this was considered');
+    return mediaAssets.audio.nullAudio;
+  } else {
+    console.log('this was not considered');
+  }
   if (!mediaAssets.audio[camelize(stim.audioFile)]) return mediaAssets.audio.nullAudio;
   // all tasks should have the replay button play whatever is in stim.audioFile (might be just prompt/instructions)
 
@@ -69,8 +75,10 @@ function getStimulus(trialType) {
     stim.task === 'vocab' ||
     trialsOfCurrentType < 3
   ) {
+    console.log('returning audio stimuli ', mediaAssets.audio[camelize(stim.audioFile)]);
     return mediaAssets.audio[camelize(stim.audioFile)];
   } else {
+    console.log('returning null audio: ', mediaAssets.audio.nullAudio);
     return mediaAssets.audio.nullAudio;
   }
 }
@@ -92,7 +100,7 @@ function getPrompt(task) {
   if (stim.task === 'Mental Rotation' || stim.task === 'Matrix Reasoning') showImageStim = true;
 
   if (stim.trialType === 'instructions' || stim.task === 'instructions' || showImageStim) {
-    if(!stimItem) stimItem = ''; // was undefined in vocab instruction trials
+    if (!stimItem) stimItem = ''; // was undefined in vocab instruction trials
     return (
       `<div id='stimulus-container'>` +
       replayButtonDiv +
@@ -114,7 +122,12 @@ function getPrompt(task) {
   }
 
   // just audio - no text prompt/stimulus
-  if (task === 'vocab' || task === 'trog' || stim.trialType === 'Number Identification' || stim.trialType === 'Number Comparison') {
+  if (
+    task === 'vocab' ||
+    task === 'trog' ||
+    stim.trialType === 'Number Identification' ||
+    stim.trialType === 'Number Comparison'
+  ) {
     return `<div id='stimulus-container'>` + replayButtonDiv + `</div>`;
   }
 
@@ -222,7 +235,13 @@ async function keyboardBtnFeedback(e, practiceBtns, stim) {
             btn.classList.add('practice-correct');
             feedbackAudio = mediaAssets.audio.feedbackGoodJob;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, keyboard_response: e.key.toLowerCase(), button_response: null }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  keyboard_response: e.key.toLowerCase(),
+                  button_response: null,
+                }),
               1000,
             );
           } else {
@@ -240,7 +259,13 @@ async function keyboardBtnFeedback(e, practiceBtns, stim) {
             btn.classList.add('practice-correct');
             feedbackAudio = mediaAssets.audio.feedbackGoodJob;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, keyboard_response: e.key.toLowerCase(), button_response: null }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  keyboard_response: e.key.toLowerCase(),
+                  button_response: null,
+                }),
               1000,
             );
           } else {
@@ -305,7 +330,13 @@ function doOnLoad(task) {
             btn.classList.add('practice-correct');
             feedbackAudio = mediaAssets.audio.feedbackGoodJob;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, button_response: i, keyboard_response: null  }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  button_response: i,
+                  keyboard_response: null,
+                }),
               1000,
             );
           } else {
@@ -321,7 +352,13 @@ function doOnLoad(task) {
             btn.classList.add('practice-correct');
             feedbackAudio = mediaAssets.audio.feedbackGoodJob;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, button_response: i, keyboard_response: null }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  button_response: i,
+                  keyboard_response: null,
+                }),
               1000,
             );
           } else {
@@ -379,7 +416,7 @@ function doOnLoad(task) {
       buttonContainer.classList.add(`${buttonLayout}-layout`);
     }
 
-    let responseChoices 
+    let responseChoices;
     if (stim.trialType === 'Fraction') {
       responseChoices = store.session('nonFractionSelections');
     } else {
@@ -440,7 +477,8 @@ function doOnLoad(task) {
         }
       }
 
-      if (keyHelpers && !isTouchScreen) { // GK: add && !(buttonLayout === 'default') ? (exception: mental rotation)
+      if (keyHelpers && !isTouchScreen) {
+        // GK: add && !(buttonLayout === 'default') ? (exception: mental rotation)
         // Margin on the actual button element
         el.children[0].style.marginBottom = '.5rem';
 
@@ -479,7 +517,7 @@ function doOnFinish(data, task) {
   const stimulus = store.session('nextStimulus');
   // target is the actual value as a string
   const target = store.session('target');
-  let responseValue = null
+  let responseValue = null;
 
   if (stimulus.trialType !== 'instructions') {
     if (data.keyboard_response) {
@@ -491,7 +529,10 @@ function doOnFinish(data, task) {
         responseValue = currPracticeChoiceMix[data.button_response];
       } else {
         data.correct = data.button_response === store.session('correctResponseIdx');
-        responseValue = stimulus.trialType === 'Fraction' ? store.session('nonFractionSelections')[data.button_response] : store.session('choices')[data.button_response];
+        responseValue =
+          stimulus.trialType === 'Fraction'
+            ? store.session('nonFractionSelections')[data.button_response]
+            : store.session('choices')[data.button_response];
       }
     }
 
@@ -569,7 +610,7 @@ function doOnFinish(data, task) {
 
   if (task === 'egma-math') {
     setSkipCurrentBlock(stimulus.trialType);
-  } else if ((store.session.get('incorrectTrials') >= store.session.get('config').maxIncorrect)) {
+  } else if (store.session.get('incorrectTrials') >= store.session.get('config').maxIncorrect) {
     finishExperiment();
   }
 }
@@ -586,7 +627,9 @@ export const afcStimulusTemplate = ({ trialType, responseAllowed, promptAboveBut
         save_trial: true,
         // In order for ROAR to write computed scores to the run doc in the correct format,
         // assessment_stage must be explicitly "test_response" or "practice_response"
-        assessment_stage: store.session.get('config').isRoarApp ? 'test_response' : store.session.get('nextStimulus').task,
+        assessment_stage: store.session.get('config').isRoarApp
+          ? 'test_response'
+          : store.session.get('nextStimulus').task,
         // not for firekit
         isPracticeTrial: store.session.get('nextStimulus').notes === 'practice',
       };
@@ -616,6 +659,6 @@ export const afcStimulus = ({ trialType, responseAllowed, promptAboveButtons, ta
         promptAboveButtons: promptAboveButtons,
         task: task,
       }),
-    ]
-    }
+    ],
+  };
 };

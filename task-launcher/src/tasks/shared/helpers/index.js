@@ -21,7 +21,7 @@ export * from './prepareChoices';
 export * from './stringToBoolean';
 export * from './fractionToMathML';
 export * from './appTimer';
-export * from './components'
+export * from './components';
 export * from './replayAudio';
 export * from './loadingScreen';
-export * from './setSkipCurrentBlock'
+export * from './setSkipCurrentBlock';

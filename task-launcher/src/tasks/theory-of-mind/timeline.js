@@ -4,12 +4,7 @@ import store from 'store2';
 import { initTrialSaving, initTimeline, createPreloadTrials } from '../shared/helpers';
 import { jsPsych, initializeCat } from '../taskSetup';
 // trials
-import { 
-  afcStimulus,
-  exitFullscreen, 
-  setupStimulus,
-  taskFinished,
-} from '../shared/trials';
+import { afcStimulus, exitFullscreen, setupStimulus, taskFinished } from '../shared/trials';
 
 export default function buildTOMTimeline(config, mediaAssets) {
   const preloadTrials = createPreloadTrials(mediaAssets).default;
@@ -26,9 +21,7 @@ export default function buildTOMTimeline(config, mediaAssets) {
   };
 
   const stimulusBlock = {
-    timeline: [
-      afcStimulus(trialConfig)
-    ],
+    timeline: [afcStimulus(trialConfig)],
     // true = execute normally, false = skip
     conditional_function: () => {
       if (store.session.get('skipCurrentTrial')) {

@@ -4,4 +4,4 @@ export const getMemoryGameType = (mode, reverse) => {
   } else {
     return reverse ? 'backward-training' : 'forward-training';
   }
-}
+};

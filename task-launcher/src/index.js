@@ -1,5 +1,11 @@
 import store from 'store2';
-import { isTaskFinished, getMediaAssets, dashToCamelCase, showLevanteLogoLoading, hideLevanteLogoLoading } from './tasks/shared/helpers';
+import {
+  isTaskFinished,
+  getMediaAssets,
+  dashToCamelCase,
+  showLevanteLogoLoading,
+  hideLevanteLogoLoading,
+} from './tasks/shared/helpers';
 import './styles/task.scss';
 import taskConfig from './tasks/taskConfig';
 
@@ -27,6 +33,8 @@ export class TaskLauncher {
         mediaAssets = await getMediaAssets('vocab-test', {}, language);
       } else if (taskName === 'memory-game') {
         mediaAssets = await getMediaAssets('memory-game-levante', {}, language);
+      } else if (taskName.includes('roarInference')) {
+        mediaAssets = await getMediaAssets(`roar-inference`, {}, language);
       } else {
         mediaAssets = await getMediaAssets(taskName, {}, language);
       }
