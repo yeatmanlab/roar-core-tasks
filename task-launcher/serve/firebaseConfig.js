@@ -3,7 +3,6 @@
 // Change this to use your projects database API keys
 /* eslint-disable import/prefer-default-export */
 
-
 /* eslint-disable import/prefer-default-export */
 const devFirebaseConfig = {
   apiKey: 'AIzaSyCX9WR-j9yv1giYeFsMpbjj2G3p7jNHxIU',

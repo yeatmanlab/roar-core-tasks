@@ -59,7 +59,7 @@ const transformCSV = (csvInput, numOfPracticeTrials, sequentialStimulus) => {
       notes: row.notes,
       distractors: (() => {
         if (row.task === 'roar-inference') {
-          return row.response_alternatives.split(',').map(alt => alt.replace(/"/g, ''));
+          return row.response_alternatives.split(',').map((alt) => alt.replace(/"/g, ''));
         } else {
           return containsLettersOrSlash(row.response_alternatives)
             ? row.response_alternatives.split(',')
