@@ -14,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Delete roar-levante-core-tasks
-        run: rm -rf roar-levante-core-tasks
+        run: rm -rf roar-levante-core-tasks  # Adjust the path as necessary
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
       - run: npm ci && npm run build:dev
-        working-directory: task-launcher/package.json
+        working-directory: your/subdirectory/path  # This should be the directory containing package.json
       - name: Deploy to Firebase Hosting Channel
         id: firebase-deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -28,9 +28,11 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GSE_ROAR_ASSESSMENT }}'
           projectId: gse-roar-assessment
           target: staging
-      - run: echo ${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}
+      - name: Get Deploy URL
+        id: get-deploy-url
+        run: echo "Deploy URL=${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}" >> $GITHUB_ENV
     outputs:
-      deployUrl: ${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}
+      deployUrl: ${{ env.DEPLOY_URL }}
 
   cypress_run:
     needs: [build_and_preview]
