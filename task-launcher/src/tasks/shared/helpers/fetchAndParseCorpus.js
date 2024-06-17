@@ -55,12 +55,11 @@ const transformCSV = (csvInput, numOfPracticeTrials, sequentialStimulus) => {
       trialType: row.trial_type,
       image: row?.image?.includes(',') ? row.image.split(',') : row?.image,
       timeLimit: row.time_limit,
-      answer: _toNumber(row.answer) || row.answer,
+      answer: _toNumber(row.answer) || row.answer.replace(/"/g, ''),
       notes: row.notes,
       distractors: (() => {
         if (row.task === 'roar-inference') {
-          console.log('choices', row.response_alternatives);
-          return row.response_alternatives.split(',');
+          return row.response_alternatives.split(',').map(alt => alt.replace(/"/g, ''));
         } else {
           return containsLettersOrSlash(row.response_alternatives)
             ? row.response_alternatives.split(',')

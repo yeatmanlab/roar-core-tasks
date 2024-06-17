@@ -4,7 +4,6 @@ import { fractionToMathML } from './';
 
 export const prepareChoices = (target, distractors, randomizeOrder = true, trialType) => {
   let choices;
-  console.log('target ', target, ' distractors ', distractors);
   if (!target || distractors.includes(target)) {
     // If target is not present, don't add to options
     choices = [...distractors];
