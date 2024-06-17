@@ -69,6 +69,20 @@ const transformCSV = (csvInput, numOfPracticeTrials, sequentialStimulus) => {
       })(),
       // difficulty: row.difficulty,
       audioFile: row.audio_file,
+      story: (() => {
+        if (row.task === 'roar-inference') {
+          return row.story;
+        } else {
+          return '';
+        }
+      })(),
+      story_id: (() => {
+        if (row.task === 'roar-inference') {
+          return row.story_id;
+        } else {
+          return '';
+        }
+      })(),
     };
 
     if (row.task === 'Mental Rotation') {

@@ -978,6 +978,64 @@ $border-color: #0f3cac;
           border-radius: 2rem;
         }
       }
+
+      // ROAR - Inference
+      #inference-container {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+        width: 100%;
+
+        .centered-container-haf {
+          display: flex;
+          justify-content: center;
+        }
+
+        #inference-container-inside {
+          background-color: #fff;
+          border: 3px solid #275bdd;
+          border-radius: 2rem;
+          margin: 1rem 0;
+          color: #275bdd;
+          padding: 0 0.5rem;
+          width: 60%;
+
+          #inference-story {
+            font-size: 2rem;
+            text-align: center;
+          }
+        }
+
+        #inference-question {
+          font-size: 1.9rem;
+        }
+      }
+      .inference-btn {
+        display: flex;
+        width: 40vh;
+        height: 9vh;
+        padding: 8px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid black;
+        background: white;
+        border-radius: 32px;
+        // text
+        color: black;
+        font-family: 'Noto Sans';
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        cursor: pointer;
+      }
+      .inference-btn:hover {
+        background-color: gainsboro;
+      }
     }
   }
 }

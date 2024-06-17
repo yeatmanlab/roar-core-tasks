@@ -1,14 +1,12 @@
 import 'regenerator-runtime/runtime';
 import store from 'store2';
 // setup
-import { getStimulusBlockCount, initTrialSaving, initTimeline, createPreloadTrials } from '../shared/helpers';
+import { initTrialSaving, initTimeline } from '../shared/helpers';
 import { jsPsych, initializeCat } from '../taskSetup';
 // trials
 import { afcStimulus, exitFullscreen, setupStimulus, taskFinished } from '../shared/trials';
 
 export default function buildRoarInferenceimeline(config, mediaAssets) {
-  const preloadTrials = createPreloadTrials(mediaAssets).default;
-
   initTrialSaving(config);
   const initialTimeline = initTimeline(config);
 
@@ -21,9 +19,7 @@ export default function buildRoarInferenceimeline(config, mediaAssets) {
   };
 
   const stimulusBlock = {
-    timeline: [
-      // afcStimulus(trialConfig)
-    ],
+    timeline: [afcStimulus(trialConfig)],
     // true = execute normally, false = skip
     conditional_function: () => {
       if (store.session.get('skipCurrentTrial')) {
@@ -34,7 +30,7 @@ export default function buildRoarInferenceimeline(config, mediaAssets) {
     },
   };
 
-  const timeline = [preloadTrials, initialTimeline];
+  const timeline = [initialTimeline];
 
   const numOfTrials = store.session.get('totalTrials');
   for (let i = 0; i < numOfTrials; i++) {
