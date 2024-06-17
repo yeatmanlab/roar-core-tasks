@@ -1,15 +1,18 @@
 {
   "projects": {
-    "default": "hs-levante-assessment-dev"
+    "default": "gse-roar-assessment"
   },
   "targets": {
-    "hs-levante-assessment-dev": {
+    "gse-roar-assessment": {
       "hosting": {
-        "core-tasks": [
-          "core-tasks"
+        "production": [
+          "roar-inference"
         ],
-        "test": [
-          "core-tasks-testing"
+        "staging": [
+          "roar-inference-staging"
+        ],
+        "testinference": [
+          "roar-inference-testing"
         ]
       }
     }
