@@ -6,13 +6,10 @@
     "gse-roar-assessment": {
       "hosting": {
         "production": [
-          "roar-inference"
+          "roar-tasks"
         ],
         "staging": [
-          "roar-inference-staging"
-        ],
-        "testinference": [
-          "roar-inference-testing"
+          "roar-tasks-staging"
         ]
       }
     }
