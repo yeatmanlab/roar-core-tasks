@@ -11,6 +11,8 @@
   ],
   "scripts": {
     "build": "npx webpack --mode production --env dbmode=production",
+    "build:dev": "npx webpack --mode production --env dbmode=development",
+    "build:prod": "npx webpack --mode production --env dbmode=production",
     "prepackage": "rimraf lib/",
     "package": "npx rollup -c",
     "postpackage": "node postBuildPackage.js",
