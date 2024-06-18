@@ -14,7 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Delete roar-levante-core-tasks
-        run: rm -rf roar-levante-core-tasks  # Adjust the path as necessary
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
