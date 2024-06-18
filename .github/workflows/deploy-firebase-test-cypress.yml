@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: 'lts/*'
       - run: npm ci && npm run build:dev
+        working-directory: ./task-launcher
       - name: Deploy to Firebase Hosting Channel
         id: firebase-deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -25,11 +26,9 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GSE_ROAR_ASSESSMENT }}'
           projectId: gse-roar-assessment
           target: staging
-      - name: Get Deploy URL
-        id: get-deploy-url
-        run: echo "Deploy URL=${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}" >> $GITHUB_ENV
+      - run: echo ${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}
     outputs:
-      deployUrl: ${{ env.DEPLOY_URL }}
+      deployUrl: ${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}
 
   cypress_run:
     needs: [build_and_preview]
