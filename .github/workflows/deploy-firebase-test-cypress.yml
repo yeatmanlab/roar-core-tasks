@@ -17,7 +17,6 @@ jobs:
         with:
           node-version: 'lts/*'
       - run: npm ci && npm run build:dev
-        working-directory: ./task-launcher
       - name: Deploy to Firebase Hosting Channel
         id: firebase-deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
