@@ -1,7 +1,5 @@
-// ONLY FOR STANDALONE (WEB APP)
-
-// Change this to use your projects database API keys
 /* eslint-disable import/prefer-default-export */
+// import { log } from '../src/experiment/config/logger';
 
 /* eslint-disable import/prefer-default-export */
 const devFirebaseConfig = {
@@ -23,8 +21,9 @@ const productionFirebaseConfig = {
   appId: '1:757277423033:web:d6e204ee2dd1047cb77268',
 };
 
-// eslint-disable-next-line no-undef
-export const firebaseConfig = ENV === 'production' ? productionFirebaseConfig : devFirebaseConfig;
+export const firebaseConfig =
+  // eslint-disable-next-line no-undef
+  ROAR_DB === 'production' ? productionFirebaseConfig : devFirebaseConfig;
 
 export const roarConfig = {
   firebaseConfig,
@@ -32,3 +31,4 @@ export const roarConfig = {
 
 // eslint-disable-next-line operator-linebreak
 const logMessage = `This ROAR app will write data to the ${roarConfig.firebaseConfig.projectId} firestore database`;
+// log.info(logMessage);

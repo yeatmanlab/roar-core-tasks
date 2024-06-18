@@ -1,7 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { merge } = require('webpack-merge');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const commonConfig = {
   optimization: {
@@ -42,7 +47,7 @@ const commonConfig = {
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
         type: 'asset/resource',
         generator: {
           filename: 'img/[name][ext]',
@@ -103,10 +108,20 @@ const webConfig = merge(commonConfig, {
       keep: /\.git/,
     },
   },
+  devtool: 'source-map',
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'LEVANTE core tasks',
+      title: 'roar-tasks',
     }),
+    // sentryWebpackPlugin({
+    //   org: 'roar-89588e380',
+    //   project: 'roar-tasks',
+    //   authToken: process.env.SENTRY_AUTH_TOKEN,
+    //   debug: true,
+    //   errorHandler: (err) => {
+    //     console.warn(err);
+    //   },
+    // }),
   ],
 });
 
@@ -116,20 +131,23 @@ const productionConfig = merge(webConfig, {
 
 const developmentConfig = merge(webConfig, {
   mode: 'development',
-  devtool: 'inline-source-map',
   devServer: {
+    port: 8000,
     static: './dist',
+    client: {
+      overlay: false,
+    },
   },
 });
 
 module.exports = async (env, args) => {
-  const dbEnv = env.dbmode === 'production' ? 'production' : 'development';
+  const roarDB = env.dbmode === 'production' ? 'production' : 'development';
 
   const envDependentConfig = {
     plugins: [
       new webpack.ids.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
       new webpack.DefinePlugin({
-        ENV: JSON.stringify(dbEnv),
+        ROAR_DB: JSON.stringify(roarDB),
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',
