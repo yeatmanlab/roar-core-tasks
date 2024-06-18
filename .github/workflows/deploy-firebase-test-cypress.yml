@@ -1,4 +1,5 @@
-name: Firebase Deploy to Staging and Cypress e2e Tests
+name: Firebase Deploy to Staging and Cypress E2E Tests
+
 on:
   pull_request:
     types: [opened, reopened, synchronize]
@@ -9,26 +10,32 @@ concurrency:
 
 jobs:
   build_and_preview:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-      - run: npm ci && npm run build:dev
-        working-directory: ./task-launcher
-      - name: Deploy to Firebase Hosting Channel
+      - name: Install Dependencies and Build
+        run: |
+          cd ./task-launcher
+          npm ci
+          npm run build:dev
+      - name: Deploy to Firebase Hosting
         id: firebase-deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GSE_ROAR_ASSESSMENT }}'
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GSE_ROAR_ASSESSMENT }}
           projectId: gse-roar-assessment
           target: staging
-      - run: echo ${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}
+      - name: Set Deployed URL
+        run: echo "::set-output name=deployUrl::${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}"
     outputs:
-      deployUrl: ${{ fromJson(steps.firebase-deploy.outputs.urls)[0] }}
+      deployUrl: ${{ steps.set_deployed_url.outputs.deployUrl }}
 
   cypress_run:
     needs: [build_and_preview]
