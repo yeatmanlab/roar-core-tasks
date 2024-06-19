@@ -9,6 +9,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  echo_job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "full name = ${{github.event.pull_request.head.repo.full_name}}"
+      - run: echo "github repo = ${{github.repository}}"
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
