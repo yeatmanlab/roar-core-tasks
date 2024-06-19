@@ -1,6 +1,4 @@
-import { defineConfig } from 'cypress';
-
-export default defineConfig({
+module.exports = {
   projectId: 'g63x9c',
   e2e: {
     experimentalRunAllSpecs: true,
@@ -14,4 +12,4 @@ export default defineConfig({
       timeout: 10000,
     },
   },
-});
+};

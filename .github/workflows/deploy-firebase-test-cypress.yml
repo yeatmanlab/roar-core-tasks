@@ -72,4 +72,5 @@ jobs:
           parallel: true
           spec: 'cypress/e2e/**/*'
           ci-build-id: ${{ github.run_id }}-${{ matrix.browser }}
-      
+      - name: Print URL
+        run: echo "Cypress tests ran against $CYPRESS_BASE_URL"
