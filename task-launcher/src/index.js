@@ -8,6 +8,7 @@ import {
 } from './tasks/shared/helpers';
 import './styles/task.scss';
 import taskConfig from './tasks/taskConfig';
+import { initSentry } from './sentry';
 
 export let mediaAssets;
 export class TaskLauncher {
@@ -19,6 +20,7 @@ export class TaskLauncher {
   }
 
   async init() {
+    initSentry();
     await this.firekit.startRun();
 
     const { taskName, language } = this.gameParams;

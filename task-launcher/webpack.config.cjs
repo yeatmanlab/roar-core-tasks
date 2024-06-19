@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -113,15 +113,15 @@ const webConfig = merge(commonConfig, {
     new HtmlWebpackPlugin({
       title: 'roar-tasks',
     }),
-    // sentryWebpackPlugin({
-    //   org: 'roar-89588e380',
-    //   project: 'roar-tasks',
-    //   authToken: process.env.SENTRY_AUTH_TOKEN,
-    //   debug: true,
-    //   errorHandler: (err) => {
-    //     console.warn(err);
-    //   },
-    // }),
+    sentryWebpackPlugin({
+      org: "roar-89588e380",
+      project: "roar-tasks",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      debug: true,
+      errorHandler: (err) => {
+        console.warn(err);
+      },
+    }),
   ],
 });
 

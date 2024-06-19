@@ -1,15 +1,17 @@
 import commonjs from '@rollup/plugin-commonjs';
+import postcss from 'rollup-plugin-postcss';
 import dsv from '@rollup/plugin-dsv';
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import postcss from 'rollup-plugin-postcss';
+import { sentryRollupPlugin } from '@sentry/rollup-plugin';
+import 'dotenv/config';
 
 export default {
   input: 'src/index.js',
   plugins: [
     postcss({
-      extract: 'resources/core-tasks.css',
+      extract: 'resources/roar-tasks.css',
     }),
     dsv(),
     json(),
@@ -18,14 +20,20 @@ export default {
     }),
     terser(),
     commonjs(),
+    sentryRollupPlugin({
+      org: 'roar-89588e380',
+      project: 'roar-tasks',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
   ],
   output: [
     {
       dir: 'lib',
-      name: 'core-tasks',
+      name: '@bdelab/roar-tasks',
       entryFileNames: '[name].[hash].js',
       chunkFileNames: '[name].[hash].js',
       format: 'es',
+      sourcemap: true,
     },
   ],
 };
