@@ -20,7 +20,6 @@ export default function buildRoarInferenceimeline(config, mediaAssets) {
 
   const stimulusBlock = {
     timeline: [afcStimulus(trialConfig)],
-    // true = execute normally, false = skip
     conditional_function: () => {
       if (store.session.get('skipCurrentTrial')) {
         store.session.set('skipCurrentTrial', false);
