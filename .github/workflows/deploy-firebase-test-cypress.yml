@@ -55,15 +55,13 @@ jobs:
       COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Change folder
-        run: |
-            cd ./task-launcher
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          working-directory: ./task-launcher
           browser: ${{ matrix.browser }}
           headed: true
           build: echo "Build step already completed"
