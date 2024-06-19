@@ -1,7 +1,5 @@
 import { defineConfig } from 'cypress';
 
-console.log(process.env.CYPRESS_BASE_URL );
-
 export default defineConfig({
   projectId: 'g63x9c',
   e2e: {
@@ -12,7 +10,7 @@ export default defineConfig({
       // implement node event listeners here
     },
     env: {
-      baseUrl: process.env.CYPRESS_BASE_URL ?? 'http://localhost:8000',
+      baseUrl: process.env.CYPRESS_BASE_URL ?? 'https://roar-tasks-staging--pr1-enh-roar-inference-muunidg9.web.app',
       timeout: 10000,
     },
   },
