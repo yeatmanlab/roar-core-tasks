@@ -57,7 +57,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-  
+      - run: |
+          cd ./task-luncher
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
