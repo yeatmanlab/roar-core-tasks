@@ -1,5 +1,7 @@
 import { defineConfig } from 'cypress';
 
+console.log(process.env.CYPRESS_BASE_URL );
+
 export default defineConfig({
   projectId: 'g63x9c',
   e2e: {
