@@ -57,20 +57,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: |
-          cd ./task-luncher
+
+      - name: Install dependencies
+        run: |
+          cd task-launcher
+          npm ci
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          browser: ${{ matrix.browser }}
-          headed: true
-          build: echo "Build step already completed"
-          start: echo "App already deployed to Firebase"
-          wait-on: ${{ env.CYPRESS_BASE_URL }}
-          wait-on-timeout: 60
-          record: true
-          parallel: true
-          spec: 'cypress/e2e/**/*'
-          ci-build-id: ${{ github.run_id }}-${{ matrix.browser }}
+        run: |
+          cd task-launcher
+          npx cypress run --browser chromium --head --record --parallel --spec 'cypress/e2e/**/*'
+        env:
+          CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
