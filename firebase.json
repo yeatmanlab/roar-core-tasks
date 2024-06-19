@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "public": "dist",
+      "public": "./task-launcher/dist",
       "target": "production",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
@@ -23,29 +23,8 @@
       ]
     },
     {
-      "public": "dist",
+      "public": "./task-launcher/dist",
       "target": "staging",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**/*",
-          "headers": [
-            {
-              "key": "Feature-Policy",
-              "value": "autoplay=*"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "public": "dist",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
