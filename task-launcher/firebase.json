@@ -43,27 +43,6 @@
           ]
         }
       ]
-    },
-    {
-      "public": "dist",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**/*",
-          "headers": [
-            {
-              "key": "Feature-Policy",
-              "value": "autoplay=*"
-            }
-          ]
-        }
-      ]
     }
   ]
 }
