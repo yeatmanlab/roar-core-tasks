@@ -37,6 +37,8 @@ jobs:
     outputs:
       deployUrl: ${{ steps.set_deployed_url.outputs.deployUrl }}
 
+      name: Cypress Run
+
   cypress_run:
     needs: [build_and_preview]
     runs-on: ubuntu-latest
@@ -49,18 +51,18 @@ jobs:
     env:
       CYPRESS_BASE_URL: ${{ needs.build_and_preview.outputs.deployUrl }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      COMMIT_INFO_MESSAGE: Tests for PR ${{ github.event.number }} "${{ github.event.pull_request.title }}" from commit "${{ github.event.pull_request.head.sha }}"
+      COMMIT_INFO_MESSAGE: 'Tests for PR ${{ github.event.number }} "${{ github.event.pull_request.title }}" from commit "${{ github.event.pull_request.head.sha }}"'
       COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+  
+      - name: Change directory
+        run: cd ./task-launcher
+  
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        run: |
-          cd ./task-launcher
-          npm ci
-          npm run build:dev
         with:
           browser: ${{ matrix.browser }}
           headed: true
@@ -72,3 +74,4 @@ jobs:
           parallel: true
           spec: 'cypress/e2e/**/*'
           ci-build-id: ${{ github.run_id }}-${{ matrix.browser }}
+      
