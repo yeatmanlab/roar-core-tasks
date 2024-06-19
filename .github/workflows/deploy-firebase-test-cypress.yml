@@ -59,7 +59,10 @@ jobs:
         uses: actions/checkout@v4
   
       - name: Change directory
-        run: cd ./task-launcher
+        run: | 
+          cd ./task-launcher 
+          npm ci
+          npm run build:dev
   
       - name: Cypress run
         uses: cypress-io/github-action@v6
