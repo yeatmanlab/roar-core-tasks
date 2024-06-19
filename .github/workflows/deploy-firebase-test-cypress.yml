@@ -9,13 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  echo_job:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "full name = ${{github.event.pull_request.head.repo.full_name}}"
-      - run: echo "github repo = ${{github.repository}}"
   build_and_preview:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    # if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -62,10 +57,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        run: |
-          cd ./task-launcher
-          npm ci
-          npm run build:dev
         with:
           browser: ${{ matrix.browser }}
           headed: true
