@@ -10,7 +10,7 @@ import {
   arrowKeyEmojis,
   replayButtonDiv,
   setupReplayAudio,
-  setSkipCurrentBlock
+  setSkipCurrentBlock,
 } from '../../shared/helpers';
 import { mediaAssets } from '../../..';
 import _toNumber from 'lodash/toNumber';
@@ -49,7 +49,7 @@ const showStaggeredBtnAndPlaySound = (btn) => {
     const altValue = img.alt;
     playAudio(mediaAssets.audio[camelize(altValue)]);
   }
-}
+};
 
 function getStimulus(trialType) {
   // ToDo: trialType (audio/html) no longer varies -- remove
@@ -92,10 +92,10 @@ function getPrompt(task) {
   if (stim.task === 'Mental Rotation' || stim.task === 'Matrix Reasoning') showImageStim = true;
 
   if (stim.trialType === 'instructions' || stim.task === 'instructions' || showImageStim) {
-    if(!stimItem) stimItem = ''; // was undefined in vocab instruction trials
+    if (!stimItem) stimItem = ''; // was undefined in vocab instruction trials
     return (
       `<div id='stimulus-container'>` +
-      replayButtonDiv +
+      (task !== 'roar-inference' ? replayButtonDiv : '') +
       `<div id="prompt-container-text">
                 <p id="prompt">${t[camelize(stim.audioFile)]}</p>
             </div>
@@ -113,8 +113,22 @@ function getPrompt(task) {
     );
   }
 
+  if (stim.task === 'roar-inference') {
+    return `<div id="inference-container">
+        <div id="inference-container-inside">
+            <p id="inference-story">${stim.story}</p>
+        </div>
+        <p id="inference-question"> ${stim.item}</p>
+      </div>`;
+  }
+
   // just audio - no text prompt/stimulus
-  if (task === 'vocab' || task === 'trog' || stim.trialType === 'Number Identification' || stim.trialType === 'Number Comparison') {
+  if (
+    task === 'vocab' ||
+    task === 'trog' ||
+    stim.trialType === 'Number Identification' ||
+    stim.trialType === 'Number Comparison'
+  ) {
     return `<div id='stimulus-container'>` + replayButtonDiv + `</div>`;
   }
 
@@ -137,12 +151,12 @@ function getPrompt(task) {
       `<div id='stimulus-container'>` +
       replayButtonDiv + // || stim.item
       `<div id="prompt-container-text">
-                    <p id="prompt">${t[camelize(stim.audioFile)]}</p>
-                </div>
-                <br>
-                ${task === 'egma-math' ? `<p id="stimulus-html">${stimItem}</p>` : ``}
-                
-            </div>`
+              <p id="prompt">${t[camelize(stim.audioFile)]}</p>
+          </div>
+          <br>
+          ${task === 'egma-math' ? `<p id="stimulus-html">${stimItem}</p>` : ``}
+          
+      </div>`
     );
   }
 }
@@ -194,6 +208,8 @@ function getButtonHtml(task) {
   } else if (task === 'egma-math') {
     // practice-btn class does not add any styles, only used for querySelector
     return `<button class='math-btn ${stimulus.notes === 'practice' ? 'practice-btn' : ''}'>%choice%</button>`;
+  } else if (task === 'roar-inference') {
+    return `<button class='inference-btn ${stimulus.notes === 'practice' ? 'practice-btn' : ''}'>%choice%</button>`;
   } else {
     return `<button class='${stimulus.notes === 'practice' ? 'practice-btn' : ''}'>%choice%</button>`;
   }
@@ -222,7 +238,13 @@ async function keyboardBtnFeedback(e, practiceBtns, stim) {
             btn.classList.add('practice-correct');
             feedbackAudio = mediaAssets.audio.feedbackGoodJob;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, keyboard_response: e.key.toLowerCase(), button_response: null }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  keyboard_response: e.key.toLowerCase(),
+                  button_response: null,
+                }),
               1000,
             );
           } else {
@@ -240,7 +262,13 @@ async function keyboardBtnFeedback(e, practiceBtns, stim) {
             btn.classList.add('practice-correct');
             feedbackAudio = mediaAssets.audio.feedbackGoodJob;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, keyboard_response: e.key.toLowerCase(), button_response: null }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  keyboard_response: e.key.toLowerCase(),
+                  button_response: null,
+                }),
               1000,
             );
           } else {
@@ -284,6 +312,16 @@ function doOnLoad(task) {
     parentResponseDiv.style.display = 'flex';
     parentResponseDiv.style.flexDirection = 'row';
   }
+  if (task === 'roar-inference') {
+    const inferenceBody = document.querySelector('.jspsych-display-element');
+    if (inferenceBody) {
+      inferenceBody.style.backgroundImage = 'none';
+      inferenceBody.style.backgroundColor = 'lightblue';
+    }
+    const parentResponseDiv = document.getElementById('jspsych-audio-multi-response-btngroup');
+    parentResponseDiv.style.display = 'flex';
+    parentResponseDiv.style.flexDirection = 'column';
+  }
   const currentTrialIndex = jsPsych.getProgress().current_trial_global;
   let twoTrialsAgoIndex = currentTrialIndex - 2;
   if (stim.task === 'math') {
@@ -303,14 +341,20 @@ function doOnLoad(task) {
           // Loose equality to handle number strings
           if (choice == stim.answer) {
             btn.classList.add('practice-correct');
-            feedbackAudio = mediaAssets.audio.feedbackGoodJob;
+            feedbackAudio = mediaAssets.audio.feedbackGoodJob ?? mediaAssets.audio.nullAudio;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, button_response: i, keyboard_response: null  }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  button_response: i,
+                  keyboard_response: null,
+                }),
               1000,
             );
           } else {
             btn.classList.add('practice-incorrect');
-            feedbackAudio = mediaAssets.audio.feedbackTryAgain;
+            feedbackAudio = mediaAssets.audio.feedbackTryAgain ?? mediaAssets.audio.nullAudio;
             setTimeout(() => enableBtns(practiceBtns), 500);
             incorrectPracticeResponses.push(choice);
           }
@@ -319,14 +363,20 @@ function doOnLoad(task) {
 
           if (choice == stim.answer) {
             btn.classList.add('practice-correct');
-            feedbackAudio = mediaAssets.audio.feedbackGoodJob;
+            feedbackAudio = mediaAssets.audio.feedbackGoodJob ?? mediaAssets.audio.nullAudio;
             setTimeout(
-              () => jsPsych.finishTrial({ response: choice, incorrectPracticeResponses: incorrectPracticeResponses, button_response: i, keyboard_response: null }),
+              () =>
+                jsPsych.finishTrial({
+                  response: choice,
+                  incorrectPracticeResponses: incorrectPracticeResponses,
+                  button_response: i,
+                  keyboard_response: null,
+                }),
               1000,
             );
           } else {
             btn.classList.add('practice-incorrect');
-            feedbackAudio = mediaAssets.audio.feedbackTryAgain;
+            feedbackAudio = mediaAssets.audio.feedbackTryAgain ?? mediaAssets.audio.nullAudio;
             setTimeout(() => enableBtns(practiceBtns), 500);
             incorrectPracticeResponses.push(choice);
           }
@@ -379,7 +429,7 @@ function doOnLoad(task) {
       buttonContainer.classList.add(`${buttonLayout}-layout`);
     }
 
-    let responseChoices 
+    let responseChoices;
     if (stim.trialType === 'Fraction') {
       responseChoices = store.session('nonFractionSelections');
     } else {
@@ -440,7 +490,8 @@ function doOnLoad(task) {
         }
       }
 
-      if (keyHelpers && !isTouchScreen) { // GK: add && !(buttonLayout === 'default') ? (exception: mental rotation)
+      if (keyHelpers && !isTouchScreen) {
+        // GK: add && !(buttonLayout === 'default') ? (exception: mental rotation)
         // Margin on the actual button element
         el.children[0].style.marginBottom = '.5rem';
 
@@ -479,7 +530,7 @@ function doOnFinish(data, task) {
   const stimulus = store.session('nextStimulus');
   // target is the actual value as a string
   const target = store.session('target');
-  let responseValue = null
+  let responseValue = null;
 
   if (stimulus.trialType !== 'instructions') {
     if (data.keyboard_response) {
@@ -491,7 +542,10 @@ function doOnFinish(data, task) {
         responseValue = currPracticeChoiceMix[data.button_response];
       } else {
         data.correct = data.button_response === store.session('correctResponseIdx');
-        responseValue = stimulus.trialType === 'Fraction' ? store.session('nonFractionSelections')[data.button_response] : store.session('choices')[data.button_response];
+        responseValue =
+          stimulus.trialType === 'Fraction'
+            ? store.session('nonFractionSelections')[data.button_response]
+            : store.session('choices')[data.button_response];
       }
     }
 
@@ -569,7 +623,7 @@ function doOnFinish(data, task) {
 
   if (task === 'egma-math') {
     setSkipCurrentBlock(stimulus.trialType);
-  } else if ((store.session.get('incorrectTrials') >= store.session.get('config').maxIncorrect)) {
+  } else if (store.session.get('incorrectTrials') >= store.session.get('config').maxIncorrect) {
     finishExperiment();
   }
 }
@@ -586,7 +640,9 @@ export const afcStimulusTemplate = ({ trialType, responseAllowed, promptAboveBut
         save_trial: true,
         // In order for ROAR to write computed scores to the run doc in the correct format,
         // assessment_stage must be explicitly "test_response" or "practice_response"
-        assessment_stage: store.session.get('config').isRoarApp ? 'test_response' : store.session.get('nextStimulus').task,
+        assessment_stage: store.session.get('config').isRoarApp
+          ? 'test_response'
+          : store.session.get('nextStimulus').task,
         // not for firekit
         isPracticeTrial: store.session.get('nextStimulus').notes === 'practice',
       };
@@ -616,6 +672,6 @@ export const afcStimulus = ({ trialType, responseAllowed, promptAboveButtons, ta
         promptAboveButtons: promptAboveButtons,
         task: task,
       }),
-    ]
-    }
+    ],
+  };
 };

@@ -17,7 +17,7 @@ export const afcMatch = {
     return {
       save_trial: stim.trialType !== 'instructions',
       assessment_stage: stim.task,
-        // not for firekit
+      // not for firekit
       isPracticeTrial: stim.notes === 'practice',
     };
   },
@@ -28,23 +28,21 @@ export const afcMatch = {
   prompt: () => {
     const prompt = camelize(store.session.get('nextStimulus').audioFile);
     const t = store.session.get('translations');
-    return (
-      `<div id='stimulus-container'>
+    return `<div id='stimulus-container'>
         ${replayButtonDiv}
         <div id='prompt-container-text'>
           <p id='prompt'>${t[prompt]}</p>
         </div>
-      </div>`
-    );
+      </div>`;
   },
   on_load: () => {
     // create img elements and arrange in grid as cards
     // on click they will be selected
     // can select multiple cards and deselect them
-    let audioSource
+    let audioSource;
 
     const stim = store.session.get('nextStimulus');
-    
+
     const audioFile = camelize(stim.audioFile);
     setupReplayAudio(audioSource, audioFile);
 
@@ -61,7 +59,6 @@ export const afcMatch = {
     // create card container
     const cardContainer = document.createElement('div');
     cardContainer.id = 'card-container';
-
 
     // create cards
     for (let i = 0; i < numberOfCards; i++) {
@@ -97,7 +94,6 @@ export const afcMatch = {
     }
 
     jsPsychContent.appendChild(cardContainer);
-
   },
   response_ends_trial: false,
   on_finish: (data) => {
@@ -121,45 +117,44 @@ export const afcMatch = {
     // Second check if any previous selections used those EXACT same selections
     // At least one selection must be different from previous selections
 
+    function compareSelections(selections, previousSelections) {
+      const parsedSelections = selections.map((sel) => sel.split('-'));
 
-    function compareSelections(selections, previousSelections) {  
-      const parsedSelections = selections.map(sel => sel.split("-"));
-  
       // Check if all selections share at least one common trait
       function sharedTrait(selections) {
-          const sizesAt = selections.map(sel => sel[0]);
-          const colorsAt = selections.map(sel => sel[1]);
-          const shapesAt = selections.map(sel => sel[2]);
-          const numsAt = selections.map(sel => sel[3]);
-  
-          const sizeSet = new Set(sizesAt);
-          const colorSet = new Set(colorsAt);
-          const shapeSet = new Set(shapesAt);
-          
-          let numSet = new Set();
+        const sizesAt = selections.map((sel) => sel[0]);
+        const colorsAt = selections.map((sel) => sel[1]);
+        const shapesAt = selections.map((sel) => sel[2]);
+        const numsAt = selections.map((sel) => sel[3]);
 
-          if (numsAt[0]) {
-            numSet.add(numsAt);
-          }
-  
-          return sizeSet.size === 1 || colorSet.size === 1 || shapeSet.size === 1 || numSet.size === 1;
+        const sizeSet = new Set(sizesAt);
+        const colorSet = new Set(colorsAt);
+        const shapeSet = new Set(shapesAt);
+
+        let numSet = new Set();
+
+        if (numsAt[0]) {
+          numSet.add(numsAt);
+        }
+
+        return sizeSet.size === 1 || colorSet.size === 1 || shapeSet.size === 1 || numSet.size === 1;
       }
-  
+
       // Check if any selection is different from all previous selections
       function hasNewSelection(selections, previousSelections) {
-          // If there are no previous selections, every current selection is considered new
-          if (!previousSelections || previousSelections.length === 0) {
-              return true;
-          }
+        // If there are no previous selections, every current selection is considered new
+        if (!previousSelections || previousSelections.length === 0) {
+          return true;
+        }
 
-          const allPrevious = new Set(previousSelections);
-          return selections.some(sel => !allPrevious.has(sel));
+        const allPrevious = new Set(previousSelections);
+        return selections.some((sel) => !allPrevious.has(sel));
       }
-  
+
       // Perform checks
       const traitShared = sharedTrait(parsedSelections);
       const containsNew = hasNewSelection(selections, previousSelections);
-  
+
       return traitShared && containsNew;
     }
 
@@ -173,11 +168,10 @@ export const afcMatch = {
 
     const maxIncorrect = store.session.get('config').maxIncorrect;
 
-    if ((numIncorrect('numIncorrect') === maxIncorrect)) {
+    if (numIncorrect('numIncorrect') === maxIncorrect) {
       finishExperiment();
     }
-    
-    
+
     jsPsych.data.addDataToLastTrial({
       correct: isCorrect,
     });

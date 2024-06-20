@@ -12,7 +12,6 @@ import { stimulus } from './trials/stimulus';
 import { setupStimulus, exitFullscreen, taskFinished } from '../shared/trials';
 import { afcMatch } from './trials/afcMatch';
 
-
 export default function buildSameDifferentTimeline(config, mediaAssets) {
   const preloadTrials = createPreloadTrials(mediaAssets).default;
 
@@ -20,35 +19,26 @@ export default function buildSameDifferentTimeline(config, mediaAssets) {
   const initialTimeline = initTimeline(config);
 
   const stimulusBlock = {
-    timeline: [
-      stimulus
-    ],
+    timeline: [stimulus],
   };
 
   const afcBlock = {
-    timeline: [
-      afcMatch
-    ],
+    timeline: [afcMatch],
   };
 
+  const timeline = [preloadTrials, initialTimeline];
 
-  const timeline = [
-    preloadTrials, 
-    initialTimeline, 
-  ];
-
-  const { phase1, phase2 } = store.session.get('sdsPhasesCount')
+  const { phase1, phase2 } = store.session.get('sdsPhasesCount');
 
   for (let i = 0; i < phase1; i++) {
-    timeline.push(setupStimulus)
-    timeline.push(stimulusBlock)
+    timeline.push(setupStimulus);
+    timeline.push(stimulusBlock);
   }
 
   for (let i = 0; i < phase2; i++) {
-    timeline.push(setupStimulus)
-    timeline.push(afcBlock)
+    timeline.push(setupStimulus);
+    timeline.push(afcBlock);
   }
-
 
   initializeCat();
 

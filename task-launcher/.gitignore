@@ -10,4 +10,5 @@ test-results/
 lib/
 .env
 .idea/
-package-lock.json
+# Sentry Config File
+.env.sentry-build-plugin

@@ -1,14 +1,12 @@
 import 'regenerator-runtime/runtime';
-// setup
 import store from 'store2';
-import { initTrialSaving, initTimeline, createPreloadTrials } from '../shared/helpers';
+// setup
+import { initTrialSaving, initTimeline } from '../shared/helpers';
 import { jsPsych, initializeCat } from '../taskSetup';
 // trials
 import { afcStimulus, exitFullscreen, setupStimulus, taskFinished } from '../shared/trials';
 
-export default function buildVocabTimeline(config, mediaAssets) {
-  const preloadTrials = createPreloadTrials(mediaAssets).default;
-
+export default function buildRoarInferenceimeline(config, mediaAssets) {
   initTrialSaving(config);
   const initialTimeline = initTimeline(config);
 
@@ -22,7 +20,6 @@ export default function buildVocabTimeline(config, mediaAssets) {
 
   const stimulusBlock = {
     timeline: [afcStimulus(trialConfig)],
-    // true = execute normally, false = skip
     conditional_function: () => {
       if (store.session.get('skipCurrentTrial')) {
         store.session.set('skipCurrentTrial', false);
@@ -32,7 +29,7 @@ export default function buildVocabTimeline(config, mediaAssets) {
     },
   };
 
-  const timeline = [preloadTrials, initialTimeline];
+  const timeline = [initialTimeline];
 
   const numOfTrials = store.session.get('totalTrials');
   for (let i = 0; i < numOfTrials; i++) {

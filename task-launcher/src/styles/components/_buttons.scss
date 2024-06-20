@@ -40,7 +40,7 @@ button {
     &:active {
       background: $bg-button-primary-clicked;
       border-color: $border-button-primary-clicked;
-      box-shadow:$button-default-box-shadow rgba($border-button-primary-clicked, 0.5) inset;
+      box-shadow: $button-default-box-shadow rgba($border-button-primary-clicked, 0.5) inset;
     }
   }
 
@@ -49,20 +49,23 @@ button {
     background: $border-accent;
     padding: $button-secondary-padding;
     border-color: $bg-accent_secondary;
-    box-shadow: $button-secondary-box-shadow $bg-accent_secondary inset,
+    box-shadow:
+      $button-secondary-box-shadow $bg-accent_secondary inset,
       $button-secondary-inner-shadow $bg-button-secondary inset;
 
     &:hover {
       background: $bg-button-primary-hover;
       border-color: $border-button-primary-hover;
-      box-shadow: $button-secondary-box-shadow $border-button-primary-hover inset,
+      box-shadow:
+        $button-secondary-box-shadow $border-button-primary-hover inset,
         $button-secondary-inner-shadow $bg-button-secondary inset;
     }
 
     &:active {
       background: $bg-button-primary-clicked;
       border-color: $border-button-primary-clicked;
-      box-shadow: $button-secondary-box-shadow $border-button-primary-clicked inset,
+      box-shadow:
+        $button-secondary-box-shadow $border-button-primary-clicked inset,
         $button-secondary-inner-shadow $bg-button-secondary inset;
     }
   }
@@ -71,9 +74,10 @@ button {
     background: $bg-green_base;
     padding: $button-secondary-padding;
     border-color: $border-green_dark;
-    box-shadow: $button-secondary-box-shadow $border-green_dark inset,
+    box-shadow:
+      $button-secondary-box-shadow $border-green_dark inset,
       $button-secondary-inner-shadow $bg-green-gradient inset;
-    
+
     @include respond-to('small') {
       font-size: $font-size-xxs;
       font-weight: $font-weight-normal;
@@ -87,14 +91,16 @@ button {
     &:hover {
       background: $bg-green-base-hover;
       border-color: $border-button-green-hover;
-      box-shadow: $button-secondary-box-shadow $border-button-green-hover inset,
+      box-shadow:
+        $button-secondary-box-shadow $border-button-green-hover inset,
         $button-secondary-inner-shadow $bg-green-gradient inset;
     }
 
     &:active {
       background: $bg-green-base-clicked;
       border-color: $border-button-green-clicked;
-      box-shadow: $button-secondary-box-shadow $border-button-green-clicked inset,
+      box-shadow:
+        $button-secondary-box-shadow $border-button-green-clicked inset,
         $button-secondary-inner-shadow $bg-green-gradient inset;
     }
   }

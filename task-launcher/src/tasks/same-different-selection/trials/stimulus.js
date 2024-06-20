@@ -16,7 +16,7 @@ export const stimulus = {
     return {
       save_trial: stim.trialType !== 'instructions',
       assessment_stage: stim.task,
-        // not for firekit
+      // not for firekit
       isPracticeTrial: stim.notes === 'practice',
     };
   },
@@ -28,48 +28,51 @@ export const stimulus = {
     const stim = store.session.get('nextStimulus');
     const prompt = camelize(stim.audioFile);
     const t = store.session.get('translations');
-    return (
-      `<div id='stimulus-container'>
+    return `<div id='stimulus-container'>
         ${replayButtonDiv}
         <div id='prompt-container-text'>
           <p id='prompt'>${t[prompt]}</p>
         </div>
 
-        ${stim.image && !Array.isArray(stim.image) ? 
-          `<div class='sds-prompt-image-container'>
+        ${
+          stim.image && !Array.isArray(stim.image)
+            ? `<div class='sds-prompt-image-container'>
             <img 
               src=${mediaAssets.images[camelize(stim.image)]} 
               alt=${stim.image}
             />
-          </div>` : 
-          ''
+          </div>`
+            : ''
         }
         
-        ${stim.image && Array.isArray(stim.image) ?
-          `<div class='sds-prompt-pyramid-container'>
-            ${stim.trialType == 'something-same-1'? 
-              `<img 
+        ${
+          stim.image && Array.isArray(stim.image)
+            ? `<div class='sds-prompt-pyramid-container'>
+            ${
+              stim.trialType == 'something-same-1'
+                ? `<img 
                 src=${mediaAssets.images[camelize(stim.image[0])]} 
                 alt=${stim.image[0]}
                 class='top-image'
-              />`:
-              ''
+              />`
+                : ''
             }
             <div class='sds-prompt-pyramid-base'>
-              ${stim.image.map(shape => {
-                return `<div class='base-image-container' style='cursor: default;'>
+              ${stim.image
+                .map((shape) => {
+                  return `<div class='base-image-container' style='cursor: default;'>
                           <img 
                             src=${mediaAssets.images[camelize(shape)]} 
                             alt=${shape} 
                           />
-                      </div>`}
-              ).join('')}
+                      </div>`;
+                })
+                .join('')}
             </div>
-          </div>` :
-          ''
+          </div>`
+            : ''
         }
-      <div >`
-    )
+      <div >`;
   },
   prompt_above_buttons: true,
   button_choices: () => {
@@ -92,13 +95,13 @@ export const stimulus = {
     const choices = store.session.get('choices');
     const allButtons = choices.map((choice, ind) => {
       const img = mediaAssets.images[camelize(choice)];
-      return`<button class='base-image-container'> <img src=${img} alt='shape' /> </button>`;
+      return `<button class='base-image-container'> <img src=${img} alt='shape' /> </button>`;
     });
 
     return allButtons;
   },
   on_load: () => {
-    let audioSource
+    let audioSource;
     const audioFile = camelize(store.session.get('nextStimulus').audioFile);
     setupReplayAudio(audioSource, audioFile);
   },
@@ -108,7 +111,7 @@ export const stimulus = {
 
     // Always need to write correct key because of firekit.
     // TODO: Discuss with ROAR team to remove this check
-    const isCorrect = data.button_response === store.session.get('correctResponseIdx')
+    const isCorrect = data.button_response === store.session.get('correctResponseIdx');
 
     if (!isCorrect) {
       numIncorrect.transact('numIncorrect', (n) => n + 1);
@@ -118,7 +121,7 @@ export const stimulus = {
 
     const maxIncorrect = store.session.get('config').maxIncorrect;
 
-    if ((numIncorrect('numIncorrect') == maxIncorrect)) {
+    if (numIncorrect('numIncorrect') == maxIncorrect) {
       finishExperiment();
     }
 

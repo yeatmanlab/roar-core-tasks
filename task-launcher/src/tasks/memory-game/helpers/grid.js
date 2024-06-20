@@ -1,4 +1,4 @@
-export function createGrid({x, y, numOfBlocks, blockSize, gridSize, blockSpacing}) {
+export function createGrid({ x, y, numOfBlocks, blockSize, gridSize, blockSpacing }) {
   const blocks = [];
   const numRows = gridSize;
   const numCols = numOfBlocks / gridSize;
@@ -14,25 +14,17 @@ export function createGrid({x, y, numOfBlocks, blockSize, gridSize, blockSpacing
   return blocks;
 }
 
-export function generateRandomSequence({
-  numOfBlocks, 
-  sequenceLength,
-  previousSequence = null
-}) {
+export function generateRandomSequence({ numOfBlocks, sequenceLength, previousSequence = null }) {
   const sequence = [];
 
   for (let i = 0; i < sequenceLength; i++) {
     const randomNumber = Math.floor(Math.random() * numOfBlocks);
 
-    // Avoid highlighting the same square twice in a row, 
+    // Avoid highlighting the same square twice in a row,
     // even across trial sequences
 
     // Check the last square in the previous sequence
-    if (
-      i == 0 && 
-      previousSequence && 
-      previousSequence[previousSequence.length - 1] === randomNumber
-    ) {
+    if (i == 0 && previousSequence && previousSequence[previousSequence.length - 1] === randomNumber) {
       i--;
       continue;
     }

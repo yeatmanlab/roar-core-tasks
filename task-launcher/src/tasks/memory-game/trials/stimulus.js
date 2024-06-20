@@ -7,26 +7,25 @@ import { finishExperiment } from '../../shared/trials';
 import { mediaAssets } from '../../..';
 import { getMemoryGameType } from '../helpers/getMemoryGameType';
 
-
 const x = 20;
 const y = 20;
 const blockSpacing = 0.5;
-let grid
+let grid;
 // CHANGE BACK TO 2
 let sequenceLength = 2;
-let generatedSequence
+let generatedSequence;
 let selectedCoordinates = [];
 let numCorrect = 0;
 
 // This function produces both the display and input trials for the corsi blocks
-export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
+export function getCorsiBlocks({ mode, reverse = false, isPractice = false }) {
   return {
     type: jsPsychCorsiBlocks,
     sequence: () => {
       // On very first trial, generate initial sequence
       if (!generatedSequence) {
         const numOfBlocks = store.session.get('memoryGameConfig').numOfBlocks;
-        generatedSequence = generateRandomSequence({numOfBlocks, sequenceLength})
+        generatedSequence = generateRandomSequence({ numOfBlocks, sequenceLength });
       }
 
       if (mode === 'input' && reverse) {
@@ -37,9 +36,9 @@ export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
     },
     blocks: () => {
       if (!grid) {
-        store.session.get('memoryGameConfig')
+        store.session.get('memoryGameConfig');
         const { numOfBlocks, blockSize, gridSize } = store.session.get('memoryGameConfig');
-        grid = createGrid({x, y, numOfBlocks, blockSize, gridSize, blockSpacing})
+        grid = createGrid({ x, y, numOfBlocks, blockSize, gridSize, blockSpacing });
       }
       return grid;
     },
@@ -52,7 +51,7 @@ export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
     highlight_color: '#275BDD',
     // Show feedback only for practice
     correct_color: () => '#8CAEDF',
-    incorrect_color: () => isPractice ? '#f00' : 'rgba(215, 215, 215, 0.93)',
+    incorrect_color: () => (isPractice ? '#f00' : 'rgba(215, 215, 215, 0.93)'),
     data: {
       // not camelCase because firekit
       save_trial: true,
@@ -69,10 +68,10 @@ export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
       });
 
       if (mode === 'input') {
-        store.session.set('currentTrialCorrect', data.correct)
+        store.session.set('currentTrialCorrect', data.correct);
 
         if (data.correct && !isPractice) {
-          store.session.set('incorrectTrials', 0)
+          store.session.set('incorrectTrials', 0);
           numCorrect++;
 
           if (numCorrect === 3) {
@@ -82,11 +81,11 @@ export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
         }
 
         if (!data.correct && !isPractice) {
-          store.session.transact('incorrectTrials', (value) => value + 1)
+          store.session.transact('incorrectTrials', (value) => value + 1);
           numCorrect = 0;
         }
 
-        if ((store.session.get('incorrectTrials') == store.session.get('config').maxIncorrect)) {
+        if (store.session.get('incorrectTrials') == store.session.get('config').maxIncorrect) {
           finishExperiment();
         }
 
@@ -96,23 +95,23 @@ export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
 
         // Avoid generating the same sequence twice in a row
         let newSequence = generateRandomSequence({
-            numOfBlocks, 
-            sequenceLength,
-            previousSequence: generatedSequence
+          numOfBlocks,
+          sequenceLength,
+          previousSequence: generatedSequence,
         });
 
         while (_isEqual(newSequence, generatedSequence)) {
           newSequence = generateRandomSequence({
-            numOfBlocks, 
-            sequenceLength, 
-            previousSequence: generatedSequence
+            numOfBlocks,
+            sequenceLength,
+            previousSequence: generatedSequence,
           });
         }
 
         generatedSequence = newSequence;
 
         if (!isPractice) {
-          timeoutIDs.forEach(id => clearTimeout(id));
+          timeoutIDs.forEach((id) => clearTimeout(id));
           timeoutIDs = [];
         }
       }
@@ -120,7 +119,7 @@ export function getCorsiBlocks({ mode, reverse = false, isPractice = false}) {
   };
 }
 
-let timeoutIDs = []
+let timeoutIDs = [];
 
 function doOnLoad(mode, isPractice) {
   const container = document.getElementById('jspsych-corsi-stimulus');
@@ -131,7 +130,7 @@ function doOnLoad(mode, isPractice) {
 
   container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
   container.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
-  
+
   const t = store.session.get('translations');
 
   if (!isPractice) {
@@ -169,7 +168,7 @@ function doOnLoad(mode, isPractice) {
         if (!isPractice) {
           // Avoid stacking timeouts
           if (timeoutIDs.length) {
-            timeoutIDs.forEach(id => clearTimeout(id));
+            timeoutIDs.forEach((id) => clearTimeout(id));
             timeoutIDs = [];
           }
 
@@ -205,16 +204,14 @@ function doOnLoad(mode, isPractice) {
 
   // play audio cue
   async function playAudioCue() {
-    let audioSource
+    let audioSource;
 
     const jsPsychAudioCtx = jsPsych.pluginAPI.audioContext();
-  
+
     const cue = mode === 'display' ? 'displayAudioCue' : 'inputAudioCue';
 
     // Returns a promise of the AudioBuffer of the preloaded file path.
-    const audioBuffer = await jsPsych
-        .pluginAPI
-        .getAudioBuffer(mediaAssets.audio[cue]);
+    const audioBuffer = await jsPsych.pluginAPI.getAudioBuffer(mediaAssets.audio[cue]);
 
     audioSource = jsPsychAudioCtx.createBufferSource();
     audioSource.buffer = audioBuffer;

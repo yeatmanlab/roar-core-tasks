@@ -37,10 +37,7 @@ export default function buildMentalRotationTimeline(config, mediaAssets) {
   };
 
   const stimulusBlock = {
-    timeline: [
-      afcStimulus(trialConfig), 
-      ifRealTrialResponse
-    ],
+    timeline: [afcStimulus(trialConfig), ifRealTrialResponse],
     // true = execute normally, false = skip
     conditional_function: () => {
       if (store.session.get('skipCurrentTrial')) {

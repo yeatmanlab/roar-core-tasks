@@ -1,4 +1,5 @@
 import mathTimeline from './math/timeline';
+import roarInferenceTimeline from './roarInference/timeline';
 import { fetchAndParseCorpus, initSharedConfig, initSharedStore, getTranslations } from './shared/helpers';
 import matrixTimeline from './matrix-reasoning/timeline';
 import mentalRotationTimeline from './mental-rotation/timeline';
@@ -33,6 +34,19 @@ export default {
     getTranslations: getTranslations,
     buildTaskTimeline: matrixTimeline,
     variants: {},
+  },
+  roarInference: {
+    initConfig: initSharedConfig,
+    initStore: initSharedStore,
+    loadCorpus: fetchAndParseCorpus,
+    getTranslations: getTranslations,
+    buildTaskTimeline: roarInferenceTimeline,
+    variants: {
+      // example
+      inferenceKids: {
+        // does not need to have all properties, only what is different from base task
+      },
+    },
   },
   mentalRotation: {
     initConfig: initSharedConfig,

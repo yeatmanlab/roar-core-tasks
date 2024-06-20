@@ -5,13 +5,7 @@ import { getStimulusBlockCount, initTrialSaving, initTimeline, createPreloadTria
 import { jsPsych, initializeCat } from '../taskSetup';
 // trials
 import { slider } from './trials/sliderStimulus';
-import {
-  afcStimulus, 
-  exitFullscreen, 
-  getAudioResponse, 
-  setupStimulus,
-  taskFinished,
-} from '../shared/trials';
+import { afcStimulus, exitFullscreen, getAudioResponse, setupStimulus, taskFinished } from '../shared/trials';
 import { instructions1, instructions2 } from './trials/instructions';
 
 export default function buildMathTimeline(config, mediaAssets) {
@@ -41,7 +35,7 @@ export default function buildMathTimeline(config, mediaAssets) {
 
   const afcStimulusBlock = {
     timeline: [
-      afcStimulus({ 
+      afcStimulus({
         trialType: 'audio', // or 'html'
         responseAllowed: true,
         promptAboveButtons: true,

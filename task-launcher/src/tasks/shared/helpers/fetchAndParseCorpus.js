@@ -37,8 +37,8 @@ const transformCSV = (csvInput, numOfPracticeTrials, sequentialStimulus) => {
 
   // Phase 1 is test-dimensions and something-same
   // Phase 2 is match and unique
-  let sdsPhase1Count = 0
-  let sdsPhase2Count = 0
+  let sdsPhase1Count = 0;
+  let sdsPhase2Count = 0;
 
   csvInput.forEach((row) => {
     // Leaving this here for quick testing of a certain type of trial
@@ -55,13 +55,33 @@ const transformCSV = (csvInput, numOfPracticeTrials, sequentialStimulus) => {
       trialType: row.trial_type,
       image: row?.image?.includes(',') ? row.image.split(',') : row?.image,
       timeLimit: row.time_limit,
-      answer: _toNumber(row.answer) || row.answer,
+      answer: _toNumber(row.answer) || row.answer.replace(/"/g, ''),
       notes: row.notes,
-      distractors: containsLettersOrSlash(row.response_alternatives)
-        ? row.response_alternatives.split(',')
-        : stringToNumberArray(row.response_alternatives),
+      distractors: (() => {
+        if (row.task === 'roar-inference') {
+          return row.response_alternatives.split(',').map((alt) => alt.replace(/"/g, ''));
+        } else {
+          return containsLettersOrSlash(row.response_alternatives)
+            ? row.response_alternatives.split(',')
+            : stringToNumberArray(row.response_alternatives);
+        }
+      })(),
       // difficulty: row.difficulty,
       audioFile: row.audio_file,
+      story: (() => {
+        if (row.task === 'roar-inference') {
+          return row.story;
+        } else {
+          return '';
+        }
+      })(),
+      story_id: (() => {
+        if (row.task === 'roar-inference') {
+          return row.story_id;
+        } else {
+          return '';
+        }
+      })(),
     };
 
     if (row.task === 'Mental Rotation') {
@@ -71,21 +91,18 @@ const transformCSV = (csvInput, numOfPracticeTrials, sequentialStimulus) => {
     }
 
     if (row.task === 'same-different-selection') {
-      newRow.requiredSelections = parseInt(row.required_selections)
-      newRow.sameDifferent = row.same_different,
-      newRow.affix = row.affix
+      newRow.requiredSelections = parseInt(row.required_selections);
+      (newRow.sameDifferent = row.same_different), (newRow.affix = row.affix);
 
-      if (newRow.trialType.includes('something-same') || 
-          newRow.trialType.includes('test-dimensions')
-      ) {
-        sdsPhase1Count += 1
+      if (newRow.trialType.includes('something-same') || newRow.trialType.includes('test-dimensions')) {
+        sdsPhase1Count += 1;
       } else {
-        sdsPhase2Count += 1
+        sdsPhase2Count += 1;
       }
       store.session.set('sdsPhasesCount', {
         phase1: sdsPhase1Count,
-        phase2: sdsPhase2Count
-      })
+        phase2: sdsPhase2Count,
+      });
     }
 
     let currentTrialType = newRow.trialType;
@@ -124,6 +141,7 @@ export const fetchAndParseCorpus = async (config) => {
     trog: `https://storage.googleapis.com/${task}/shared/corpora/${corpus}.csv`,
     theoryOfMind: `https://storage.googleapis.com/${task}/shared/corpora/${corpus}.csv`,
     vocab: `https://storage.googleapis.com/vocab-test/shared/corpora/${corpus}.csv`,
+    roarInference: `https://storage.googleapis.com/roar-inference/en/corpora/${corpus}.csv`,
   };
 
   function downloadCSV(url, i) {

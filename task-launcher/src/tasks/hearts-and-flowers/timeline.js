@@ -49,7 +49,6 @@ export default function buildHeartsAndFlowersTimeline(config, mediaAssets) {
   //     itemSelect: store.session('itemSelect'),
   //   });
 
-
   // TODO: parse from user input
   const timelineAdminConfig = {
     heart: {
@@ -83,10 +82,7 @@ export default function buildHeartsAndFlowersTimeline(config, mediaAssets) {
     },
   };
 
-  let timeline = [
-    preloadTrials,
-    initialTimeline,
-  ]
+  let timeline = [preloadTrials, initialTimeline];
   if (timelineAdminConfig.heart) {
     timeline.push(...getHeartOrFlowerSubtimelines(timelineAdminConfig.heart, StimulusType.Heart));
   }
@@ -125,13 +121,12 @@ function getHeartOrFlowerSubtimelines(adminConfig, stimulusType) {
 
   // Test trials
   subtimelines.push(...getHeartOrFlowerTestSection(adminConfig, stimulusType));
-  
+
   return subtimelines;
 }
 
 //TODO: check if we need to repeat the whole pair when user gets it wrong or if getting right on the feedback trial is enough
 function getHeartOrFlowerInstructionsSection(adminConfig, stimulusType) {
-
   // To build our trials for the Instruction section, let's first gather all the static data
   let instructionPracticeStimulusSide1, instructionPracticePromptText1, instructionPracticePromptAudio1;
   let instructionPracticeStimulusSide2, instructionPracticePromptText2, instructionPracticePromptAudio2;
@@ -161,11 +156,13 @@ function getHeartOrFlowerInstructionsSection(adminConfig, stimulusType) {
   }
 
   // Now let's build our trials
-  const introTrial = stimulusType === StimulusType.Heart?
-    getHeartInstructions() : getFlowerInstructions();
+  const introTrial = stimulusType === StimulusType.Heart ? getHeartInstructions() : getFlowerInstructions();
 
   // feedback-good-job, "Good job!" //TODO: double-check ok to use feedback-good-job instead of "Great! That's right!" which is absent from item bank anyway
-  const instructionPracticeFeedback = buildStimulusInvariantPracticeFeedback('heartsAndFlowersTryAgain', 'feedbackGoodJob'); // hearts-and-flowers-try-again, "That's not right. Try again."
+  const instructionPracticeFeedback = buildStimulusInvariantPracticeFeedback(
+    'heartsAndFlowersTryAgain',
+    'feedbackGoodJob',
+  ); // hearts-and-flowers-try-again, "That's not right. Try again."
   const instructionPractice1 = buildInstructionPracticeTrial(
     stimulusType,
     instructionPracticePromptText1,
@@ -196,7 +193,6 @@ function getHeartOrFlowerInstructionsSection(adminConfig, stimulusType) {
 }
 
 function getHeartOrFlowerPracticeSection(adminConfig, stimulusType) {
-
   let jsPsychAssessmentStage, feedbackKeyIncorrect;
   if (stimulusType === StimulusType.Heart) {
     jsPsychAssessmentStage = AssessmentStageType.HeartsPractice;
@@ -212,17 +208,13 @@ function getHeartOrFlowerPracticeSection(adminConfig, stimulusType) {
 
   //TODO: do we really need to nest these into a sub-timeline?
   const postPracticeBlock = {
-    timeline: [
-      getKeepUp(),
-      getKeepGoing(),
-      getTimeToPlay(),
-    ],
+    timeline: [getKeepUp(), getKeepGoing(), getTimeToPlay()],
   };
 
   // Let's prepare 2 callbacks to pass to our stimuli and feedback trials in order to manage the practice block shortcut
   let practiceWinStreakCount = 0;
   const onStimulusTrialFinishTimelineCallback = (data) => {
-    practiceWinStreakCount = data.correct ? practiceWinStreakCount+1 : 0;
+    practiceWinStreakCount = data.correct ? practiceWinStreakCount + 1 : 0;
   };
   const onFeedbackTrialFinishTimelineCallback = (data) => {
     if (practiceWinStreakCount >= adminConfig.correctPracticeTrial) {
@@ -232,7 +224,11 @@ function getHeartOrFlowerPracticeSection(adminConfig, stimulusType) {
   };
 
   // feedback-good-job, "Good job!" //TODO: double-check ok to use feedback-good-job instead of "Great! That's right!" which is absent from item bank anyway
-  const practiceFeedback = buildStimulusInvariantPracticeFeedback(feedbackKeyIncorrect, 'feedbackGoodJob', onFeedbackTrialFinishTimelineCallback);
+  const practiceFeedback = buildStimulusInvariantPracticeFeedback(
+    feedbackKeyIncorrect,
+    'feedbackGoodJob',
+    onFeedbackTrialFinishTimelineCallback,
+  );
 
   const subtimeline = [];
   subtimeline.push(getTimeToPractice());
@@ -243,7 +239,7 @@ function getHeartOrFlowerPracticeSection(adminConfig, stimulusType) {
         true,
         jsPsychAssessmentStage,
         adminConfig.stimulusPresentationTime,
-        onStimulusTrialFinishTimelineCallback
+        onStimulusTrialFinishTimelineCallback,
       ),
       practiceFeedback,
     ],
@@ -272,8 +268,8 @@ function getHeartOrFlowerTestSection(adminConfig, stimulusType) {
     console.error(errorMessage);
     throw new Error(errorMessage);
   }
-  
-  const subtimeline = []
+
+  const subtimeline = [];
   subtimeline.push({
     timeline: [
       fixation(adminConfig.interStimulusInterval),
@@ -287,7 +283,10 @@ function getHeartOrFlowerTestSection(adminConfig, stimulusType) {
 
 function getMixedInstructionsSection(adminConfig) {
   // feedback-good-job, "Good job!" //TODO: double-check ok to use feedback-good-job instead of "Great! That's right!" which is absent from item bank anyway
-  const instructionPracticeFeedback = buildStimulusInvariantPracticeFeedback('heartsAndFlowersTryAgain', 'feedbackGoodJob'); // hearts-and-flowers-try-again, "That's not right. Try again."
+  const instructionPracticeFeedback = buildStimulusInvariantPracticeFeedback(
+    'heartsAndFlowersTryAgain',
+    'feedbackGoodJob',
+  ); // hearts-and-flowers-try-again, "That's not right. Try again."
 
   const instructionPractice1 = buildInstructionPracticeTrial(
     StimulusType.Heart,
@@ -320,23 +319,28 @@ function getMixedInstructionsSection(adminConfig) {
 }
 
 function getMixedPracticeSection(adminConfig) {
-
   // Let's prepare 2 callbacks to pass to our stimuli and feedback trials in order to manage the practice block shortcut
   let practiceWinStreakCount = 0;
   const onStimulusTrialFinishTimelineCallback = (data) => {
-    practiceWinStreakCount = data.correct ? practiceWinStreakCount+1 : 0;
+    practiceWinStreakCount = data.correct ? practiceWinStreakCount + 1 : 0;
   };
   const onFeedbackTrialFinishTimelineCallback = (data) => {
     if (practiceWinStreakCount >= adminConfig.correctPracticeTrial) {
       // console.info(`Ending practice block early: win streak=${practiceWinStreakCount}`);
       jsPsych.endCurrentTimeline();
     }
-  }
+  };
 
   // feedback-good-job, "Good job!" //TODO: double-check ok to use feedback-good-job instead of "Great! That's right!" which is absent from item bank anyway
   // heart-practice-feedback2, "Remember! When you see a HEART... on the SAME side."
   // flower-practice-feedback2, "When you see a FLOWER, press the button on the OPPOSITE side."
-  const practiceFeedback = buildMixedPracticeFeedback('heartPracticeFeedback2', 'feedbackGoodJob', 'flowerPracticeFeedback2', 'feedbackGoodJob', onFeedbackTrialFinishTimelineCallback);
+  const practiceFeedback = buildMixedPracticeFeedback(
+    'heartPracticeFeedback2',
+    'feedbackGoodJob',
+    'flowerPracticeFeedback2',
+    'feedbackGoodJob',
+    onFeedbackTrialFinishTimelineCallback,
+  );
   const heartsAndFlowersPracticeTimeline = {
     timeline: [
       fixation(adminConfig.interStimulusInterval),
@@ -344,7 +348,7 @@ function getMixedPracticeSection(adminConfig) {
         true,
         AssessmentStageType.HeartsAndFlowersPractice,
         adminConfig.stimulusPresentationTime,
-        onStimulusTrialFinishTimelineCallback
+        onStimulusTrialFinishTimelineCallback,
       ),
       practiceFeedback,
     ],
@@ -354,11 +358,7 @@ function getMixedPracticeSection(adminConfig) {
 
   //TODO: do we really need to nest these into a sub-timeline?
   const heartsAndFlowersPostPracticeBlock = {
-    timeline: [
-      getKeepUp(),
-      getKeepGoing(),
-      getTimeToPlay(),
-    ],
+    timeline: [getKeepUp(), getKeepGoing(), getTimeToPlay()],
   };
 
   return [getTimeToPractice(), heartsAndFlowersPracticeTimeline, heartsAndFlowersPostPracticeBlock];
