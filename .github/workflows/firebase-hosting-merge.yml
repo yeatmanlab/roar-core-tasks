@@ -9,7 +9,7 @@ name: Deploy to Staging Firebase Hosting on Merge
       - 'v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'
 jobs:
   build_and_deploy:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: '!contains(github.event.head_commit.message, "[skip ci]")'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

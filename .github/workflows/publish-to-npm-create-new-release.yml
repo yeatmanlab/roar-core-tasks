@@ -69,8 +69,14 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemap: ./lib/*.js.map
           version: ${{ github.ref }}
+      - name: Upload source maps to Sentry
+        run: |
+          npx sentry-cli releases files ${{ github.ref_name }} upload-sourcemaps ./lib --validate
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: Notify on failure
         if: failure()
