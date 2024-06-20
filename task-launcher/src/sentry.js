@@ -19,7 +19,7 @@ export function initSentry() {
       }),
       Sentry.browserTracingIntegration(),
       captureConsoleIntegration({
-        levels: [ 'error'],
+        levels: ['error'],
       }),
       contextLinesIntegration(),
       extraErrorDataIntegration(),

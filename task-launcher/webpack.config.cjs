@@ -114,8 +114,8 @@ const webConfig = merge(commonConfig, {
       title: 'roar-tasks',
     }),
     sentryWebpackPlugin({
-      org: "roar-89588e380",
-      project: "roar-tasks",
+      org: 'roar-89588e380',
+      project: 'roar-tasks',
       authToken: process.env.SENTRY_AUTH_TOKEN,
       debug: true,
       errorHandler: (err) => {
