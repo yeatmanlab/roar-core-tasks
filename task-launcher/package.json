@@ -2,8 +2,8 @@
   "name": "@bdelab/roar-tasks",
   "version": "1.0.3",
   "description": "",
-  "main": "lib/index.deedcebb.js",
-  "module": "lib/index.deedcebb.js",
+  "main": "lib/index.ef7ff08e.js",
+  "module": "lib/index.ef7ff08e.js",
   "type": "module",
   "files": [
     "lib",
