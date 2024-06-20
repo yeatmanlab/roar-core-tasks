@@ -1,9 +1,9 @@
 {
   "name": "@bdelab/roar-tasks",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "",
-  "main": "lib/index.ef7ff08e.js",
-  "module": "lib/index.ef7ff08e.js",
+  "main": "lib/index.e1ec2b93.js",
+  "module": "lib/index.e1ec2b93.js",
   "type": "module",
   "files": [
     "lib",
